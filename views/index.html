@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #wrapper header {
+            background-image: url(https://inbodychina.com/wp-content/uploads/2019/08/20190826173602.png);
+            background-repeat: no-repeat;
+            background-color: rgba(0, 0, 0, .05);
+            background-size: 80%;
+            background-position: center center;
+            padding: 0 2rem
+        }
+
+        #wrapper header .contain h1 {
+            margin: 2rem 0 1rem 0
+        }
+
+        @media only screen and (max-width:767px) {
+            div#wrapper header {
+                padding: 0 2rem;
+                background: rgba(0, 0, 0, .05)
+            }
+        }
+
+        @media only screen and (max-width:900px) {
+            div#wrapper header {
+                background-size: 112%
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2>There is {{title}}</h2>
+    <form action="/login" method="post">
+        <p>Name: <input name="name" value="koa"></p>
+        <p>Password: <input name="pass" type="password"></p>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+</body>
+</html>

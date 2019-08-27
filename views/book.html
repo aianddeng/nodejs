@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+        <h2>Welcome the system, {{ name }}</h2>
+    <ul>
+        {% if books %}
+        {% for i in books %}
+        <li>{{i.title}} - {{i.year}}</li>
+        {% endfor %}
+        {% elif fruit %}
+        <li>Sorry, there just have {{fruit}}</li>
+        {% endif %}
+    </ul>
+</body>
+
+</html>

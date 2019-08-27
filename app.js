@@ -1,47 +1,56 @@
+// 引入文件
 var Koa = require('koa'),
-    router = require('koa-router')(),
-    bodyParser = require('koa-bodyparser'),
     app = new Koa(),
-    rNum = 0;
+    path = require('path'),
+    bodyParser = require('koa-bodyparser'),
+    nunjucks = require('koa-nunjucks-2'),
+    static = require('koa-static'),
+    controller = require('./controller'),
+    consql = require('./consql'),
+    consocket = require('./consocket');
 
-// 首页
-router.get('/', async (ctx, next) => {
-    ctx.response.body = `
-        <h2>There is Index.</h2>
-        <form action="/login" method="post">
-            <p>Name: <input name="name" value="koa"></p>
-            <p>Password: <input name="pass" type="password"></p>
-            <p><input type="submit" value="Submit"></p>
-        </form>
-    `;
-})
-// 带参数的get请求
-router.get('/user/:name', async (ctx, next) => {
-    var name = ctx.params.name;
-    ctx.response.body = `<h2>Welcome to ${name}'s page.</h2>`;
-})
-// post请求
-router.post('/login', async (ctx, next) => {
-    var name = ctx.request.body.name || '',
-        pass = ctx.request.body.pass || '';
-    if(name == 'admin' && pass == '372100'){
-        ctx.response.body = `<h2>Welcome the system, ${name}</h2`;
-    }else{
-        ctx.response.body = `<h3>Wrong user or password.<a href='/'>Please try again.</a></h3>`;
-    }
-})
+// 请求开始
+var rNum = 0;
 app.use(async (ctx, next) => {
     console.log(`第${++rNum}次请求：Address: ${ctx.url}`);
-    console.log(``);
     await next();
 })
+
+// 请求结束
 app.use(async (ctx, next) => {
     const start = new Date().getTime();
     await next();
     const ms = new Date().getTime() - start;
     console.log(`加载耗时：${ms}ms`);
 })
+
+// 解析请求体 - POST
 app.use(bodyParser());
-app.use(router.routes());
-app.listen(8888);
+
+// 加载静态文件
+app.use(static(
+    path.join(__dirname, './static')
+))
+
+// 数据库
+consql.getAllBook();
+
+// 模板引擎
+app.use(nunjucks({
+    ext: 'html',
+    path: path.join(__dirname, './views'),
+    nunjucksConfig: {
+        trimBlocks: true,
+        noCache: true,
+    }
+}))
+
+// 导入router并执行
+app.use(controller());
+
+// 监听端口
+var server = app.listen(8888);
+
+consocket(server);
+
 console.log('app started at 127.0.0.1:8888');
